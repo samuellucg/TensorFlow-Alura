@@ -1,0 +1,186 @@
+As redes neurais são uma arquitetura inspirada no cerébro humano, mais especificamente na região dos neurônios.
+
+Os neurônios humanos possuem:
+{
+    Dendritos -> Corpo Celular -> Axônio -> Terminais Sinápticos -> ...
+    (As setas representam a ordem de "execução")
+
+    Dendritos: São como uma porta, aonde nossos sinais são enviados (como um input)
+
+    Corpo Celular: Irá realizar o processamento dos sinais enviados pelo Dendritos.
+
+    Axônio: Responsável por conduzir os sinais processados aos Terminais Sinápticos.
+
+    Terminais Sinápticos: Envia o sinal para outro neurônio.
+}
+
+Com isso em mente foi criado o neurônio artificial, que é o usado em computadores. No começo foi feito em cima de uma porta AND mas
+depois foi criado o Perceptron.
+
+Perceptron:
+    Modelo neural linear para classificação binária (2 categorias) que associa pesos às entradas do modelo. 
+    
+    Ele é dividido em 5 partes: Entradas -> Pesos(B - Bias) -> Soma -> Ativação -> Saída
+
+    O aprendizado, se dá nas camadas de Soma e Ativação:
+    {
+        Soma: Modelo matématico que realiza uma soma ponderada, com o valor de entrada x valor de pesos
+        ex: I = Entrada e P = Peso e B = Bias
+
+        I1 x P1 + I2 x P2 + I3 x P3 + B = ...
+
+        O valor de B em pesos, é uma constante que é somada no final da soma.
+
+        Ativação: Determina o resultado. Se é a classe X ou Y, sim ou não, 0 ou 1 e etc.
+    }
+
+OBS: Sempre lembre que ao criar uma rede neural de acordo com um banco de dados. Uma parte daqueles dados representa a saída, ou seja
+quando você adicionar essa entrada será contando menos a saída.
+
+Se você tem 5 dados no banco de dados, como entrada na rede neural será 4 pois no banco de dados são 5 contando com uma de saída.
+
+CÓDIGO - aula1_keras_perceptron.py
+
+Por conta do Perceptron lidar apenas com casos não lineares, acaba tornando-o ineficiente em casos reais. Pois na realidade, a maioria das classificações
+não vão ser lineares. Por isso foi criado o Multi Layer Perceptron (MLP), modelo feito em cima do Perceptron mas permitindo múltiplas camadas e uma não
+linearidade.
+
+Multi Layer Perceptron (MLP):
+    Modelo neural não linear.
+
+    Ele é dividido em 3 partes: Entradas -> Camadas Ocultas e Saída
+
+    O aprendizado se dá nas camadas ocultas.
+    {
+        O processo de Pesos, Soma e Ativação ainda existe por esse modelo ser feito em cima do Perceptron.
+
+        Vamos supor que temos um exemplo com 3 neurônios para camada de entrada, 4 para a camada oculta e 2 na saída.
+
+        Camada de entrada:
+        {
+            Camada responsável por enviar os neurônios para a camada oculta. Cada neurônio irá ser enviado para TODOS
+            os neurônios das camadas ocultas.
+
+            Ou seja, o neurônio 1 irá ser enviado para os 4 neurônios na camada oculta.
+
+            Para cada envio, o neurônio terá um PESO diferente.
+
+            Ou seja serão basicamente, 12 envios da camada de entrada com 12 pesos diferentes para cada envio.
+        }
+
+        Camada Oculta:
+        {
+            Camada responsável por realizar a soma e ativação, cada neurônio na camada oculta possui um BIAS, para 
+            realizar a soma.
+        }
+
+        Camada de Saída:
+        {
+            Camada responsável pela predição, nesse caso recebe dois neurônios para enviar 
+            para Y que seria a saída real, mas para ter certeza da assertividade de seu envio é preciso entender alguns conceitos.
+        }
+
+        Feedfoward:
+        {
+            Esse é o processo que é realizado da camada de entrada à saída, ele que faz com que o MLP seja tão interligado, basicamente
+            envia todos os neurônios para todos os neurônios possíveis.
+        }
+
+        Backpropagation:
+        {
+            Camada responsável por enviar da camada de saída para a camada de entrada. Antes de fazer isso, ela guarda o valor de 
+            saída anteriormente. No caminho de volta para a camada de entrada, é feita a otimização dos pesos através de um cálculo
+            avançada, de forma que quando ser realizado o Feedfoward novamente, os pesos estejam diferentes. 
+            Ao chegar na camada de entrada, ela encerra e inicia o Feedfoward novamente.
+        }
+
+        OBS: Feedfoward e Backpropagation são realizados múltiplas vezes. Com o intuito de diminuir o LOSS (taxa de erro)
+        e aumentar a assertividade juntamente do LEARNING RATE (taxa de aprendizado)
+
+        Épocas: 
+        {
+            O número de vezes que todo o conjunto de dados de treinamento será estudado na fase de aprendizado
+        }
+
+        Funções de ativação:
+        {
+            Sigmoid:
+            {
+                Uma função não-linear, recebe qualquer valor real como entrada e retorna um valor de saída entre 0 e 1. 
+
+                Aplicações:
+                - Pode ser usada tanto na camada oculta quanto na de saída.
+                - Na camada oculta: Atenção ao usar, pois não é centrada em zero e pode causar o problema de fuga de gradiente, prejudicando o aprendizado.
+                - Na camada de saída: Indicada para problemas de classificação binária. A saída tende para valores próximos de 0 ou 1, permitindo interpretações probabilísticas.
+
+                Exemplo:
+                Se a saída for 0.8, isso pode ser interpretado como 80% de chance de a amostra pertencer à classe 1.
+
+                Observação:
+                Quando as entradas tendem a zero, a derivada da função é máxima, mas, ao longo do treinamento, o resultado tende às extremidades do intervalo ]0, 1[.
+            }
+
+            Tanh (Tangente Hiperbólica):
+            {
+                Uma função que recebe qualquer valor real como entrada e retorna um valor de saída entre -1 e 1.
+
+                Aplicações:
+                - Usada na camada oculta.
+                - Resolve o problema da Sigmoid por ser centralizada em zero.
+                - Ainda pode causar fuga de gradiente, mas de forma mais rápida que a Sigmoid.
+
+                Exemplo:
+                Para entradas muito negativas, a saída será próxima de -1. Para entradas positivas grandes, a saída será próxima de 1.
+
+                Observação:
+                Embora centralizada em zero, o problema de fuga de gradiente persiste, dificultando o treinamento em redes profundas.
+            }
+
+            ReLU (Função Linear Retificada):
+            {
+                Recebe qualquer valor real como entrada e retorna:
+                - 0, se a entrada for ≤ 0.
+                - A própria entrada, se a entrada for > 0.
+
+                Aplicações:
+                - Usada em camadas ocultas.
+                - Resolve o problema da fuga de gradiente presente em Sigmoid e Tanh.
+                - Facilita a convergência do gradiente para mínimos da função de perda.
+
+                Vantagens:
+                - Computacionalmente eficiente.
+                - Não-linear com uma componente linear.
+
+                Desvantagens:
+                - Não é centrada em zero.
+                - Pode gerar saídas muito altas.
+                - Pode “apagar” neurônios com saídas iguais a zero, prejudicando o aprendizado.
+
+                Recomendações:
+                - Inicializar os pesos com o método He.
+                - Normalizar os dados entre [0,1].
+
+                Exemplo:
+                - Entrada: [-1, 2, 0]
+                - Saída: [0, 2, 0]
+
+                Observação:
+                Muito usada em MLPs e CNNs devido à sua eficiência e bom desempenho.
+            }
+
+            Linear:
+            {
+                Uma função que retorna a entrada recebida sem alterações.
+
+                Aplicações:
+                - Indicada para camadas de saída.
+                - Não compreende relações não lineares e sua derivada é uma constante.
+
+                Exemplo:
+                Em problemas de regressão, a saída pode ser qualquer valor real, como prever o preço de uma casa.
+
+                Observação:
+                É a função padrão em algumas camadas do Keras, como Dense. Não possui uma implementação explícita, pois seu comportamento é intrínseco.
+            }
+    }
+}
