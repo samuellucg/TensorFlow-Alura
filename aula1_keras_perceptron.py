@@ -10,7 +10,7 @@ Componentes principais do Keras:
 - Keras.Layers: Oferece camadas pré-construídas com recursos específicos.
 - Keras.Layers.Dense: Camada densa, com features built-in.
   Parâmetros principais:
-    - units (int): Número de neurônios na camada.
+    - units (int): Número de neurônios = quantidade de saídas na camada.
     - input_shape (list[int]): Quantidade de entradas esperadas.
     - name (str): Nome do modelo para facilitar a identificação.
 '''
